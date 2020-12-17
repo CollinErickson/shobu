@@ -22,8 +22,8 @@ function parse_move(move) {
 	   !["1","2","3","4","5","6","7","0"].includes(move[1]) ||
 	   !["1","2","3","4","5","6","7","0"].includes(move[3]) ||
 	   !["1","2","3","4","5","6","7","0"].includes(move[4]) || 
-		!["1","2","3"].includes(move[6]) || 
-		!["1","2","3"].includes(move[7])) {
+		!["0","1","2","3","4"].includes(move[6]) || 
+		!["0","1","2","3","4"].includes(move[7])) {
 		return [false, "Not in valid range"];
 	}
 	//for (
@@ -45,6 +45,15 @@ function is_valid(move) {
 			console.log("not valid!!", move);
 			return false;
 		}
+	// Must stay on same subboard
+	if (
+		Math.floor(move[0] / 4) != Math.floor((move[0] + move[4]) / 4) || 
+		Math.floor(move[1] / 4) != Math.floor((move[1] + move[5]) / 4) || 
+		Math.floor(move[2] / 4) != Math.floor((move[2] + move[4]) / 4) || 
+		Math.floor(move[3] / 4) != Math.floor((move[3] + move[5]) / 4)
+	) {
+		return false;
+	}
 	
 	if (
 		(move[0] == 0 && move[4] < 0) ||
@@ -133,6 +142,9 @@ function input_move(move) {
 	// clear clicked_cells
 	clicked_cells = [-1, -1, -1, -1];
 	
+	// Update turn indicator
+	document.getElementById("divturn").innerHTML = "Turn: " + (team1_turn ? "&#9711;" : "&#11044;") 
+	
 	return true;
 }
 
@@ -167,6 +179,10 @@ function square_click(i,j) {
 			clicked_cells[0] = i;
 			clicked_cells[1] = j;
 		} else {
+			// Already 2 selected -> clear it
+			if (clicked_cells[2] >= 0) {
+				document.getElementById("boardsquare"+clicked_cells[2] + clicked_cells[3]).classList.remove("selectedboardsquare");
+			}
 			clicked_cells[2] = i;
 			clicked_cells[3] = j;
 		}

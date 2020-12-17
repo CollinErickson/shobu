@@ -9,7 +9,8 @@ var board = [[2,2,2,2,2,2,2,2],
 			 [2,2,2,2,2,2,2,2],
 			 [0,0,0,0,0,0,0,0],
 			 [0,0,0,0,0,0,0,0],
-			 [1,1,1,1,1,1,1,1]]
+			 [1,1,1,1,1,1,1,1]];
+var team1_turn = true;
 
 function parse_move(move) {
 	if (move.length != 8 || move[2] != " " || move[5] != " ") {
@@ -92,16 +93,33 @@ function input_move(move) {
 	move_parsed = parse_move(move);
 	if (!move_parsed[0]) {
 		alert("Can't parse move!!!\nReason: " + move_parsed[1]);
-		return;
+		return false;
 	}
 	move2 = move_parsed[1]
 	if (!is_valid(move2)) {
 		alert("Move isn't valid!!!");
-		return;
+		return false;
 	}
 	// do move
-	return true;
+	make_move(move2);
 	
+	// update board
+	display_board(board);
+	
+	// flip turn
+	team1_turn = !team1_turn;
+	
+	return true;
+}
+
+function make_move(move) {
+	// move 1
+	console.log("making move", move, move[0] + move[4], move[1] + move[5], team1_turn ? "1" :"2");
+	board[move[0]][move[1]] = "0"
+	board[move[0] + move[4]][move[1] + move[5]] = team1_turn ? "1" :"2";
+	board[move[2]][move[3]] = "0"
+	board[move[2] + move[4]][move[3] + move[5]] = team1_turn ? "1" :"2";
+	return true;
 }
 
 window.onload = function(e) {

@@ -43,7 +43,7 @@ function is_valid(move) {
 		if (board[move[0]][move[1]] != (team1_turn ? "1" : "2") || 
 		   board[move[2]][move[3]] != (team1_turn ? "1" : "2")) {
 			console.log("not valid!!", move);
-			return false;
+			return [false, "Squares must contain correct colored stones"];
 		}
 	// Must stay on same subboard
 	if (
@@ -52,34 +52,58 @@ function is_valid(move) {
 		Math.floor(move[2] / 4) != Math.floor((move[2] + move[4]) / 4) || 
 		Math.floor(move[3] / 4) != Math.floor((move[3] + move[5]) / 4)
 	) {
-		return false;
+		return [false, "Stones must stay on same subboard"];
 	}
 	
-	if (
-		(move[0] == 0 && move[4] < 0) ||
-		(move[0] == 7 && move[4] > 0) ||
-		(move[1] == 0 && move[5] < 0) ||
-		(move[1] == 7 && move[5] > 0) ||
-		(move[2] == 0 && move[4] < 0) ||
-		(move[2] == 7 && move[4] > 0) ||
-		(move[3] == 0 && move[5] < 0) ||
-		(move[3] == 7 && move[5] > 0) ||
-		(move[0] == 4 && move[4] < 0) || // repeat for midpoints
-		(move[0] == 3 && move[4] > 0) ||
-		(move[1] == 4 && move[5] < 0) ||
-		(move[1] == 3 && move[5] > 0) ||
-		(move[2] == 4 && move[4] < 0) ||
-		(move[2] == 3 && move[4] > 0) ||
-		(move[3] == 4 && move[5] < 0) ||
-		(move[3] == 3 && move[5] > 0)
-	) {
-		return false;
+	// Make sure one move is on home board (two closest to player)
+	if ((team1_turn  && move[0] < 4 && move[2] < 4) ||
+		(!team1_turn && move[0] > 3 && move[2] > 3)) {
+		return [false, "At least one move must be on the homeboards for the player (top two for black, bottom two for white)"];
 	}
-	return true;
+	
+	// Moves must be made on opposite L/R sides
+	if (move[1] < 4 && move[3] < 4 ||
+	    move[1] > 3 && move[3] > 3) {
+		return [false, "Moves must be on opposite left/right subboards"];
+	}
+	
+	// Make sure at least one move is passive (on homeboards and not pushing)
+	let stone1passive = true;
+	console.log("check passive", move);
+	if (!is_passive(move[0], move[1], move[4], move[5]) && !is_passive(move[2], move[3], move[4], move[5])) {
+		return [false, 'At least one move must be passive'];
+	}
+	
+	// Make sure aggressive pushes at most one stone
+	
+	return [true, ""];
 }
 console.log("valid test", is_valid(parse_move("71 74 22")[1]));
 console.log("valid test", is_valid(parse_move("71 74 12")[1]));
 console.log("valid test", is_valid(parse_move("71 74 32")[1]));	
+
+function is_passive(x,y,dx,dy) {
+	// Must be on homeboards
+	if (!(team1_turn ? (x >= 4) : (x < 3))) {
+		console.log("not on hb");
+		return false;
+	}
+	// Must end up in empty spot
+	if (board[x + dx][y + dy] != 0) {
+		return false;
+	}
+	
+	// If double move, must pass through empty square
+	if (Math.abs(dx) > 1.5 || Math.abs(dy) > 1.5) {
+		console.log("checking half of double jump", x + dx/2, y+dy/2);
+		if (board[x + dx/2][y + dy/2] != 0) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
 
 function convert_board_to_HTML(board) {
 	out = "<table style='font-size:36px;'> \n";
@@ -126,8 +150,10 @@ function input_move(move) {
 		return false;
 	}
 	move2 = move_parsed[1]
-	if (!is_valid(move2)) {
-		alert("Move isn't valid!!!");
+	check_valid = is_valid(move2);
+	console.log('check valid is', check_valid);
+	if (!check_valid[0]) {
+		alert("Move isn't valid!!!\nReason: " + check_valid[1]);
 		return false;
 	}
 	// do move
@@ -145,6 +171,12 @@ function input_move(move) {
 	// Update turn indicator
 	document.getElementById("divturn").innerHTML = "Turn: " + (team1_turn ? "&#9711;" : "&#11044;") 
 	
+	// Check game over
+	let game_over = check_game_over();
+	if (game_over > 0) {
+		alert("Game over, player " + game_over + " wins!");
+	}
+	
 	return true;
 }
 
@@ -152,9 +184,9 @@ function make_move(move) {
 	// move 1
 	console.log("making move", move, move[0] + move[4], move[1] + move[5], team1_turn ? "1" :"2");
 	board[move[0]][move[1]] = "0"
-	board[move[0] + move[4]][move[1] + move[5]] = team1_turn ? "1" :"2";
+	board[move[0] + move[4]][move[1] + move[5]] = team1_turn ? 1 : 2;
 	board[move[2]][move[3]] = "0"
-	board[move[2] + move[4]][move[3] + move[5]] = team1_turn ? "1" :"2";
+	board[move[2] + move[4]][move[3] + move[5]] = team1_turn ? 1 : 2;
 	return true;
 }
 
@@ -209,3 +241,18 @@ window.onload = function(e) {
 	display_board(board);
 }
 
+function check_game_over() {
+	if (!board.slice(0,4).some(x => x.slice(0,4).includes(1)) ||
+	    !board.slice(4,8).some(x => x.slice(0,4).includes(1)) ||
+	    !board.slice(0,4).some(x => x.slice(4,8).includes(1)) ||
+	    !board.slice(4,8).some(x => x.slice(4,8).includes(1))) {
+		return 2;
+	}	
+	if (!board.slice(0,4).some(x => x.slice(0,4).includes(2)) ||
+	    !board.slice(4,8).some(x => x.slice(0,4).includes(2)) ||
+	    !board.slice(0,4).some(x => x.slice(4,8).includes(2)) ||
+	    !board.slice(4,8).some(x => x.slice(4,8).includes(2))) {
+		return 1;
+	}	
+	return 0;
+}

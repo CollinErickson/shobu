@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="script.js"></script>
+	<link rel="stylesheet" href="style.css">
+	<script src="script.js"></script>
 </head>
 <body>
 
@@ -9,12 +10,40 @@
 
 <p>A painful game to play</p>
 	
-	<input type="text" id="text_move_input" name="lname" value="30 77 12"><br><br>
-	<input type="submit" value="Submit" onclick="input_move(document.getElementById('text_move_input').value)">
+	<!--<input type="text" id="text_move_input" name="lname" value="30 77 12"><br><br>
+	<input type="submit" value="Submit" onclick="input_move(document.getElementById('text_move_input').value)"> -->
 	
-	<div id="divboard">
+	<table><tr>
+		<td>
+			<div id="divboard">
+
+			</div>
+		</td>
+		
+		<td>
 	
-	</div>
+			<div id="divmove" style="margin-left:100px;">
+				<table id="tablemove" style="font-size:54px;">
+					<tr>
+						<td onclick="arrow_click(1,1)">&#11017;</td>
+						<td onclick="arrow_click(1,2)" width="100px">&#129045;</td>
+						<td onclick="arrow_click(1,3)">&#11016;</td>
+					</tr>
+					<tr>
+						<td onclick="arrow_click(2,1)">&#129044;</td>
+						<td></td>
+						<td onclick="arrow_click(2,3)">&#10142;</td>
+					</tr>
+					<tr>
+						<td onclick="arrow_click(3,1)">&#11019;</td>
+						<td onclick="arrow_click(3,2)">&#129047;</td>
+						<td onclick="arrow_click(3,3)">&#11018;</td>
+					</tr>
+				</table>
+			</div>
+		</td>
+		
+	</tr></table>
 	
 	
 

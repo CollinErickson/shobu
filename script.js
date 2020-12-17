@@ -39,34 +39,44 @@ console.log(parse_move("12 34411"))
 console.log(parse_move("12 34 11"))
 
 
-function is_valid(move, team1_turn) {
-	if (team1_turn) {
-		if (board[move[0]][move[1]] != 1 || 
-		   board[move[2]][move[3]] != 1) {
+function is_valid(move) {
+		if (board[move[0]][move[1]] != (team1_turn ? "1" : "2") || 
+		   board[move[2]][move[3]] != (team1_turn ? "1" : "2")) {
+			console.log("not valid!!", move);
 			return false;
 		}
-		if ((move[0] == 0 && move[4] < 0) ||
-		   (move[0] == 7 && move[4] > 0) ||
-		   (move[1] == 0 && move[5] < 0) ||
-		   (move[1] == 7 && move[5] > 0) ||
-		   (move[2] == 0 && move[4] < 0) ||
-		   (move[2] == 7 && move[4] > 0) ||
-		   (move[3] == 0 && move[5] < 0) ||
-		   (move[3] == 7 && move[5] > 0)) {
-			return false;
-		}
+	
+	if (
+		(move[0] == 0 && move[4] < 0) ||
+		(move[0] == 7 && move[4] > 0) ||
+		(move[1] == 0 && move[5] < 0) ||
+		(move[1] == 7 && move[5] > 0) ||
+		(move[2] == 0 && move[4] < 0) ||
+		(move[2] == 7 && move[4] > 0) ||
+		(move[3] == 0 && move[5] < 0) ||
+		(move[3] == 7 && move[5] > 0) ||
+		(move[0] == 4 && move[4] < 0) || // repeat for midpoints
+		(move[0] == 3 && move[4] > 0) ||
+		(move[1] == 4 && move[5] < 0) ||
+		(move[1] == 3 && move[5] > 0) ||
+		(move[2] == 4 && move[4] < 0) ||
+		(move[2] == 3 && move[4] > 0) ||
+		(move[3] == 4 && move[5] < 0) ||
+		(move[3] == 3 && move[5] > 0)
+	) {
+		return false;
 	}
 	return true;
 }
-console.log("valid test", is_valid(parse_move("71 74 22")[1], true));
-console.log("valid test", is_valid(parse_move("71 74 12")[1], true));
-console.log("valid test", is_valid(parse_move("71 74 32")[1], true));	
+console.log("valid test", is_valid(parse_move("71 74 22")[1]));
+console.log("valid test", is_valid(parse_move("71 74 12")[1]));
+console.log("valid test", is_valid(parse_move("71 74 32")[1]));	
 
 function convert_board_to_HTML(board) {
-	out = "<table> \n";
+	out = "<table style='font-size:36px;'> \n";
 	for (let i=0; i < 8; i++) {
 		if (i == 4) {
-		out += "\t<tr><td colspan='8' align='center'>========</td>\n";
+		out += "\t<tr><td colspan='8' style='text-align:right;'>===================</td>\n";
 			
 		}
 		out += "\t<tr>\n";
@@ -74,7 +84,18 @@ function convert_board_to_HTML(board) {
 			if (j == 4) {
 				out += "\t\t<td>" + "|" + "</td>\n";
 			}
-			out += "\t\t<td>" + board[i][j] + "</td>\n";
+			out += "\t\t<td class='boardsquare' id='boardsquare"+i+j+"' style='border:2px solid black' onclick='square_click("+i+", "+j+")'>";
+			//out += board[i][j];
+			if (board[i][j] == "0") {
+				out += ""
+			} else if (board[i][j] == "1") {
+				out += "&#9711;"
+			} else if (board[i][j] == "2") {
+				out += "&#11044;"
+			} else {
+				out += "X"
+			};
+			out += "</td>\n";
 		}
 		out += "</tr>\n";
 	}
@@ -109,6 +130,9 @@ function input_move(move) {
 	// flip turn
 	team1_turn = !team1_turn;
 	
+	// clear clicked_cells
+	clicked_cells = [-1, -1, -1, -1];
+	
 	return true;
 }
 
@@ -120,6 +144,48 @@ function make_move(move) {
 	board[move[2]][move[3]] = "0"
 	board[move[2] + move[4]][move[3] + move[5]] = team1_turn ? "1" :"2";
 	return true;
+}
+
+var clicked_cells = [-1,-1,-1,-1];
+function square_click(i,j) {
+	console.log("clicked on square", i, j);
+	square = document.getElementById("boardsquare"+i+j);
+	if (square.classList.contains("selectedboardsquare")) {
+		console.log("already clicked, removing style");
+		square.classList.remove("selectedboardsquare");
+		if (clicked_cells[0] == i && clicked_cells[1] == j) {
+			clicked_cells[0] = -1
+			clicked_cells[1] = -1
+		} else if (clicked_cells[2] == i && clicked_cells[3] == j) {
+			clicked_cells[2] = -1
+			clicked_cells[3] = -1
+		} else {
+			console.log("error 1024329 clicked cell");
+		}
+	} else {
+		if (clicked_cells[0] < 0) {
+			clicked_cells[0] = i;
+			clicked_cells[1] = j;
+		} else {
+			clicked_cells[2] = i;
+			clicked_cells[3] = j;
+		}
+		square.classList.add("selectedboardsquare");
+	}
+	
+	//document.getElementById("boardsquare"+i+j).style.backgroundColor='pink'
+	//document.getElementById("boardsquare"+i+j)
+	return;
+}
+
+function arrow_click(i,j) {
+	if (clicked_cells[0] < 0 || clicked_cells[1] < 0 || clicked_cells[2] < 0 || clicked_cells[3] < 0) {
+		alert("Need to have clicked two squares");
+		return;
+		}
+	move = clicked_cells[0].toString() + clicked_cells[1] + " " + clicked_cells[2] + clicked_cells[3] + " " + i + j;
+	console.log('move is', move);
+	input_move(move);
 }
 
 window.onload = function(e) {

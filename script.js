@@ -107,16 +107,16 @@ function is_passive(x,y,dx,dy) {
 
 
 function convert_board_to_HTML(board) {
-	out = "<table style='font-size:36px;'> \n";
+	out = "<table style='font-size:44px;'> \n";
 	for (let i=0; i < 8; i++) {
 		if (i == 4) {
-		out += "\t<tr><td colspan='8' style='text-align:right;'>===================</td>\n";
+		out += "\t<tr><td colspan='9' style='text-align:center;'>===================</td>\n";
 			
 		}
 		out += "\t<tr>\n";
 		for (let j=0; j < 8; j++) {
 			if (j == 4) {
-				out += "\t\t<td>" + "|" + "</td>\n";
+				out += "\t\t<td width='20px' style='text-align:center;'>" + "|" + "</td>\n";
 			}
 			out += "\t\t<td class='boardsquare' id='boardsquare"+i+j+"' style='border:2px solid black' onclick='square_click("+i+", "+j+")'>";
 			//out += board[i][j];
@@ -211,7 +211,11 @@ function make_move_sub(x,y,dx,dy) {
 		}
 		board[x+dx][y+dy] = team1_turn ? 1 : 2;
 	} else { // Move double space, need to check both for existing stones
+		// Check if there is stone is adjacent spot
 		
+		// Check if there is stone is end spot
+		
+		// Move current stone
 		board[x+dx][y+dy] = team1_turn ? 1 : 2;
 	}
 	// Clear where it started

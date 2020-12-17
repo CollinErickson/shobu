@@ -5,8 +5,8 @@ console.log("loaded script js")
 var board = [[2,2,2,2,2,2,2,2],
 			 [0,0,0,0,0,0,0,0],
 			 [0,0,0,0,0,0,0,0],
-			 [0,0,0,0,0,0,0,0],
-			 [0,0,0,0,0,0,0,0],
+			 [1,1,1,1,1,1,1,1],
+			 [2,2,2,2,2,2,2,2],
 			 [0,0,0,0,0,0,0,0],
 			 [0,0,0,0,0,0,0,0],
 			 [1,1,1,1,1,1,1,1]]
@@ -14,7 +14,7 @@ var board = [[2,2,2,2,2,2,2,2],
 function parse_move(move) {
 	if (move.length != 8 || move[2] != " " || move[5] != " ") {
 		console.log("bad move!!!")
-		return [false, []];
+		return [false, "wrong format"];
 	}
 	// Make sure chars are ints
 	if (!["1","2","3","4","5","6","7","0"].includes(move[0]) ||
@@ -23,7 +23,7 @@ function parse_move(move) {
 	   !["1","2","3","4","5","6","7","0"].includes(move[4]) || 
 		!["1","2","3"].includes(move[6]) || 
 		!["1","2","3"].includes(move[7])) {
-		return [false, []];
+		return [false, "Not in valid range"];
 	}
 	//for (
 	move2 = [parseInt(move[0]),
@@ -64,8 +64,15 @@ console.log("valid test", is_valid(parse_move("71 74 32")[1], true));
 function convert_board_to_HTML(board) {
 	out = "<table> \n";
 	for (let i=0; i < 8; i++) {
+		if (i == 4) {
+		out += "\t<tr><td colspan='8' align='center'>========</td>\n";
+			
+		}
 		out += "\t<tr>\n";
 		for (let j=0; j < 8; j++) {
+			if (j == 4) {
+				out += "\t\t<td>" + "|" + "</td>\n";
+			}
 			out += "\t\t<td>" + board[i][j] + "</td>\n";
 		}
 		out += "</tr>\n";
@@ -79,6 +86,23 @@ function display_board(board) {
 	return;
 }
 //document.getElementById("divboard").innerHTML = convert_board_to_HTML(board)
+
+function input_move(move) {
+	console.log("new move is", move);
+	move_parsed = parse_move(move);
+	if (!move_parsed[0]) {
+		alert("Can't parse move!!!\nReason: " + move_parsed[1]);
+		return;
+	}
+	move2 = move_parsed[1]
+	if (!is_valid(move2)) {
+		alert("Move isn't valid!!!");
+		return;
+	}
+	// do move
+	return true;
+	
+}
 
 window.onload = function(e) {
 	console.log("running onload");

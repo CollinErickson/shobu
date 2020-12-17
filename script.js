@@ -75,6 +75,7 @@ function is_valid(move) {
 	}
 	
 	// Make sure aggressive pushes at most one stone
+	console.log("NEED TO CHECK FOR DOUBLE PUSHES");
 	
 	return [true, ""];
 }
@@ -183,11 +184,38 @@ function input_move(move) {
 function make_move(move) {
 	// move 1
 	console.log("making move", move, move[0] + move[4], move[1] + move[5], team1_turn ? "1" :"2");
-	board[move[0]][move[1]] = "0"
-	board[move[0] + move[4]][move[1] + move[5]] = team1_turn ? 1 : 2;
-	board[move[2]][move[3]] = "0"
-	board[move[2] + move[4]][move[3] + move[5]] = team1_turn ? 1 : 2;
+	//board[move[0]][move[1]] = "0"
+	//board[move[0] + move[4]][move[1] + move[5]] = team1_turn ? 1 : 2;
+	//board[move[2]][move[3]] = "0"
+	//board[move[2] + move[4]][move[3] + move[5]] = team1_turn ? 1 : 2;
+	make_move_sub(move[0], move[1], move[4], move[5]);
+	make_move_sub(move[2], move[3], move[4], move[5]);
+	
 	return true;
+}
+
+function make_move_sub(x,y,dx,dy) {
+	// Move single space
+	if (Math.abs(dx) < 1.5 && Math.abs(dy) < 1.5) {
+		if (board[x+dx][y+dy] != 0) {
+			pushx = x + 2*dx;
+			pushy = y + 2*dy;
+			// Check if pushed off board
+			if (Math.floor(pushx / 4) != Math.floor(x / 4) || 
+			   Math.floor(pushy / 4) != Math.floor(y / 4)) {
+				// Do nothing, it will be overwritten
+			} else {
+				// Stays on board, move it to the push spot
+				board[pushx][pushy] = team1_turn ? 2 : 1;
+			}
+		}
+		board[x+dx][y+dy] = team1_turn ? 1 : 2;
+	} else { // Move double space, need to check both for existing stones
+		
+		board[x+dx][y+dy] = team1_turn ? 1 : 2;
+	}
+	// Clear where it started
+	board[x][y] = 0;
 }
 
 var clicked_cells = [-1,-1,-1,-1];

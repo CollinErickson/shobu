@@ -183,14 +183,15 @@ function convert_board_to_HTML(board) {
 			if (j == 4) {
 				out += "\t\t<td width='20px' style='text-align:center;'>" + "|" + "</td>\n";
 			}
-			out += "\t\t<td class='boardsquare' id='boardsquare"+i+j+"' style='border:2px solid black' onclick='square_click("+i+", "+j+")'>";
+			out += "\t\t<td class='boardsquare boardsquare" + (j < 3.5 ? "left": "right") + "' id='boardsquare"+i+j+"' style='border:2px solid black' onclick='square_click("+i+", "+j+")'>";
 			//out += board[i][j];
 			if (board[i][j] == "0") {
 				out += ""
 			} else if (board[i][j] == "1") {
-				out += "&#9711;"
+				//out += "&#9711;"
+				out += "<div style='color:wheat;text-shadow: 0 0 3px black;'>&#11044;</div>"
 			} else if (board[i][j] == "2") {
-				out += "&#11044;"
+				out += "<div style='color:black;text-shadow: 0 0 2px black;'>&#11044;</div>"
 			} else {
 				out += "X"
 			};

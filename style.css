@@ -1,9 +1,23 @@
 
+body {
+	
+	background-color:wheat;/*antiquewhite;*/
+}
+
 .boardsquare {
 	text-align:center;
 	vertical-align: middle;
 	width: 44px;
 	height:44px;
+	color:black;
+}
+
+.boardsquareleft {
+	background-color:saddlebrown;
+}
+
+.boardsquareright {
+	background-color:rosybrown;
 }
 
 .selectedboardsquare {

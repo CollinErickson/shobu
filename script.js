@@ -1,5 +1,5 @@
 
-console.log("loaded script js")
+//console.log("loaded script js")
 
 
 var board = [[2,2,2,2,2,2,2,2],
@@ -35,8 +35,8 @@ function parse_move(move) {
 			parseInt(move[7]) - 2];
 	return [true, move2];
 }
-console.log(parse_move("12 34411"))
-console.log(parse_move("12 34 11"))
+//console.log(parse_move("12 34411"))
+//console.log(parse_move("12 34 11"))
 
 
 function is_valid(move) {
@@ -69,7 +69,6 @@ function is_valid(move) {
 	
 	// Make sure at least one move is passive (on homeboards and not pushing)
 	let stone1passive = true;
-	console.log("check passive", move);
 	if (!is_passive(move[0], move[1], move[4], move[5]) && !is_passive(move[2], move[3], move[4], move[5])) {
 		return [false, 'At least one move must be passive'];
 	}
@@ -78,21 +77,19 @@ function is_valid(move) {
 	// Make sure aggressive pushes at most one stone
 	//console.log("NEED TO CHECK FOR DOUBLE PUSHES");
 	if (is_double_push_or_selfpush(move[0], move[1], move[4], move[5]) || is_double_push_or_selfpush(move[2], move[3], move[4], move[5])) {
-		console.log("DOUBLE PUSH:", is_double_push_or_selfpush(move[0], move[1], move[4], move[5]), is_double_push_or_selfpush(move[2], move[3], move[4], move[5]), "\n-----",
-				    move[0], move[1], move[4], move[5], "\n-----", move[2], move[3], move[4], move[5]);
 		return [false, "Can't push two stones at once or push your own stones"];
 	}
 	
 	return [true, ""];
 }
-console.log("valid test", is_valid(parse_move("71 74 22")[1]));
-console.log("valid test", is_valid(parse_move("71 74 12")[1]));
-console.log("valid test", is_valid(parse_move("71 74 32")[1]));	
+//console.log("valid test", is_valid(parse_move("71 74 22")[1]));
+//console.log("valid test", is_valid(parse_move("71 74 12")[1]));
+//console.log("valid test", is_valid(parse_move("71 74 32")[1]));	
 
 function is_passive(x,y,dx,dy) {
 	// Must be on homeboards
 	if (!(team1_turn ? (x >= 4) : (x < 3))) {
-		console.log("not on hb");
+		//console.log("not on hb");
 		return false;
 	}
 	// Must end up in empty spot
@@ -102,7 +99,7 @@ function is_passive(x,y,dx,dy) {
 	
 	// If double move, must pass through empty square
 	if (Math.abs(dx) > 1.5 || Math.abs(dy) > 1.5) {
-		console.log("checking half of double jump", x + dx/2, y+dy/2);
+		//console.log("checking half of double jump", x + dx/2, y+dy/2);
 		if (board[x + dx/2][y + dy/2] != 0) {
 			return false;
 		}
@@ -114,11 +111,11 @@ function is_passive(x,y,dx,dy) {
 function is_double_push_or_selfpush(x,y,dx,dy) {
 	// Suicide moves should be excluded
 	// If single space move, either that space must be open or it is on the edge of the board or the next one must be open
-	console.log("checking double push", x,y,dx,dy);
+	//console.log("checking double push", x,y,dx,dy);
 	if (Math.abs(dx) < 1.5 && Math.abs(dy) < 1.5) {
-		console.log("-- is single move");
+		//console.log("-- is single move");
 		if (!(board[x+dx][y+dy] == 0)) { // Spot is full
-			console.log("-- and isn't empty");
+			//console.log("-- and isn't empty");
 			// Self push, can't do it
 			if (board[x+dx][y+dy] == (team1_turn ? 1 : 2)) {
 				return true;
@@ -151,8 +148,8 @@ function is_double_push_or_selfpush(x,y,dx,dy) {
 		let spot2_open_or_off_board = (board[pushx2][pushy2] == 0) || on_different_subboards(x,y,pushx2,pushy2);
 		// Reverse order since x3/y3 might be off of board
 		let spot3_open_or_off_board = on_different_subboards(x,y,pushx3,pushy3) || (board[pushx3][pushy3] == 0);
-		console.log("--", spot1_open_or_off_board, spot2_open_or_off_board, spot3_open_or_off_board);
-		console.log('--xy are', x,y,pushx1,pushy1, pushx2,pushy2, pushx3,pushy3);
+		//console.log("--", spot1_open_or_off_board, spot2_open_or_off_board, spot3_open_or_off_board);
+		//console.log('--xy are', x,y,pushx1,pushy1, pushx2,pushy2, pushx3,pushy3);
 		if (spot1_open_or_off_board + spot2_open_or_off_board + spot3_open_or_off_board < 1.5) {
 			return true;
 		}
@@ -210,7 +207,7 @@ function display_board(board) {
 //document.getElementById("divboard").innerHTML = convert_board_to_HTML(board)
 
 function input_move(move) {
-	console.log("new move is", move);
+	//console.log("new move is", move);
 	move_parsed = parse_move(move);
 	if (!move_parsed[0]) {
 		alert("Can't parse move!!!\nReason: " + move_parsed[1]);
@@ -218,7 +215,7 @@ function input_move(move) {
 	}
 	move2 = move_parsed[1]
 	check_valid = is_valid(move2);
-	console.log('check valid is', check_valid);
+	//console.log('check valid is', check_valid);
 	if (!check_valid[0]) {
 		alert("Move isn't valid!!!\nReason: " + check_valid[1]);
 		return false;
@@ -249,7 +246,7 @@ function input_move(move) {
 
 function make_move(move) {
 	// move 1
-	console.log("making move", move, move[0] + move[4], move[1] + move[5], team1_turn ? "1" :"2");
+	//console.log("making move", move, move[0] + move[4], move[1] + move[5], team1_turn ? "1" :"2");
 	//board[move[0]][move[1]] = "0"
 	//board[move[0] + move[4]][move[1] + move[5]] = team1_turn ? 1 : 2;
 	//board[move[2]][move[3]] = "0"
@@ -279,7 +276,6 @@ function make_move_sub(x,y,dx,dy) {
 		// Check if there is stone is adjacent spot
 		
 		// Check if there is stone is end spot
-		console.log("FIX PUSH ON DOUBLE MOVE");
 		let pushx1 = x+.5*dx;
 		let pushy1 = y + .5*dy;
 		let pushx2 = x+1*dx;
@@ -304,7 +300,7 @@ function make_move_sub(x,y,dx,dy) {
 
 var clicked_cells = [-1,-1,-1,-1];
 function square_click(i,j) {
-	console.log("clicked on square", i, j);
+	//console.log("clicked on square", i, j);
 	square = document.getElementById("boardsquare"+i+j);
 	if (square.classList.contains("selectedboardsquare")) {
 		console.log("already clicked, removing style");
@@ -319,18 +315,21 @@ function square_click(i,j) {
 			console.log("error 1024329 clicked cell");
 		}
 	} else {
-		if (clicked_cells[0] < 0) {
-			clicked_cells[0] = i;
-			clicked_cells[1] = j;
-		} else {
-			// Already 2 selected -> clear it
-			if (clicked_cells[2] >= 0) {
-				document.getElementById("boardsquare"+clicked_cells[2] + clicked_cells[3]).classList.remove("selectedboardsquare");
+		// Only permit when clicking on own stone.
+		if (board[i][j] == (team1_turn ? 1 : 2)) {
+			if (clicked_cells[0] < 0) {
+				clicked_cells[0] = i;
+				clicked_cells[1] = j;
+			} else {
+				// Already 2 selected -> clear it
+				if (clicked_cells[2] >= 0) {
+					document.getElementById("boardsquare"+clicked_cells[2] + clicked_cells[3]).classList.remove("selectedboardsquare");
+				}
+				clicked_cells[2] = i;
+				clicked_cells[3] = j;
 			}
-			clicked_cells[2] = i;
-			clicked_cells[3] = j;
+			square.classList.add("selectedboardsquare");
 		}
-		square.classList.add("selectedboardsquare");
 	}
 	
 	//document.getElementById("boardsquare"+i+j).style.backgroundColor='pink'
@@ -344,12 +343,12 @@ function arrow_click(i,j) {
 		return;
 		}
 	move = clicked_cells[0].toString() + clicked_cells[1] + " " + clicked_cells[2] + clicked_cells[3] + " " + i + j;
-	console.log('move is', move);
+	//console.log('move is', move);
 	input_move(move);
 }
 
 window.onload = function(e) {
-	console.log("running onload");
+	//console.log("running onload");
 	display_board(board);
 }
 

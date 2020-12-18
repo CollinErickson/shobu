@@ -74,8 +74,12 @@ function is_valid(move) {
 		return [false, 'At least one move must be passive'];
 	}
 	
+	
 	// Make sure aggressive pushes at most one stone
-	console.log("NEED TO CHECK FOR DOUBLE PUSHES");
+	//console.log("NEED TO CHECK FOR DOUBLE PUSHES");
+	if (is_double_push_or_selfpush(move[0], move[1], move[4], move[5]) || is_double_push_or_selfpush(move[2], move[3], move[4], move[5])) {
+		return [false, "Can't push two stones at once or push your own stones"];
+	}
 	
 	return [true, ""];
 }
@@ -105,6 +109,64 @@ function is_passive(x,y,dx,dy) {
 	return true;
 }
 
+function is_double_push_or_selfpush(x,y,dx,dy) {
+	// Suicide moves should be excluded
+	// If single space move, either that space must be open or it is on the edge of the board or the next one must be open
+	console.log("checking double push", x,y,dx,dy);
+	if (Math.abs(dx) < 1.5 && Math.abs(dy) < 1.5) {
+		console.log("-- is single move");
+		if (!(board[x+dx][y+dy] == 0)) { // Spot is full
+			console.log("-- and isn't empty");
+			// Self push, can't do it
+			if (board[x+dx][y+dy] == (team1_turn ? 1 : 2)) {
+				return true;
+			}
+			// Otherwise it is opponent, make sure push spot is open or offboard
+			let pushx = x+2*dx;
+			let pushy = y + 2*dy;
+			// If the push spot is off the board, then the move is good
+			if (Math.floor(pushx / 4) != Math.floor(x / 4) || 
+			   Math.floor(pushy / 4) != Math.floor(y / 4)) {
+				// It's fine to push a piece off
+			} else {
+				// It's not a push off, so next space must be open
+				if (board[pushx][pushy] != 0) {
+					return true;
+				}
+			}
+		}
+	} else {
+		// Check for push on two space moves
+		// For 3 spots in the move direction, only 1 can be on same board and occupied
+		
+		let pushx1 = x+.5*dx;
+		let pushy1 = y + .5*dy;
+		let pushx2 = x+1*dx;
+		let pushy2 = y + 1*dy;
+		let pushx3 = x+1.5*dx;
+		let pushy3 = y + 1.5*dy;
+		let spot1_open_or_off_board = (board[pushx1][pushy1] == 0) || on_different_subboards(x,y,pushx1,pushy1);
+		let spot2_open_or_off_board = (board[pushx2][pushy2] == 0) || on_different_subboards(x,y,pushx2,pushy2);
+		let spot3_open_or_off_board = (board[pushx3][pushy3] == 0) || on_different_subboards(x,y,pushx3,pushy3);
+		console.log("--", spot1_open_or_off_board, spot2_open_or_off_board, spot3_open_or_off_board);
+		console.log('--xy are', x,y,pushx1,pushy1, pushx2,pushy2, pushx3,pushy3);
+		if (spot1_open_or_off_board + spot1_open_or_off_board + spot1_open_or_off_board < 1.5) {
+			return true;
+		}
+		
+		// Check for self push
+		if (board[pushx1][pushy1] == (team1_turn ? 1 : 2) || board[pushx2][pushy2] == (team1_turn ? 1 : 2)) {
+			return true;
+		}
+		
+	}
+	return false;
+}
+
+function on_different_subboards(x1,y1, x2, y2) {
+	return (Math.floor(x1 / 4) != Math.floor(x2 / 4) || 
+			   Math.floor(x2 / 4) != Math.floor(y2 / 4));
+}
 
 function convert_board_to_HTML(board) {
 	out = "<table style='font-size:44px;'> \n";

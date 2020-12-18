@@ -1,4 +1,11 @@
 
+.boardsquare {
+	text-align:center;
+	vertical-align: middle;
+	width: 44px;
+	height:44px;
+}
+
 .selectedboardsquare {
 	background-color: pink;
 }

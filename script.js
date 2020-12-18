@@ -78,6 +78,8 @@ function is_valid(move) {
 	// Make sure aggressive pushes at most one stone
 	//console.log("NEED TO CHECK FOR DOUBLE PUSHES");
 	if (is_double_push_or_selfpush(move[0], move[1], move[4], move[5]) || is_double_push_or_selfpush(move[2], move[3], move[4], move[5])) {
+		console.log("DOUBLE PUSH:", is_double_push_or_selfpush(move[0], move[1], move[4], move[5]), is_double_push_or_selfpush(move[2], move[3], move[4], move[5]), "\n-----",
+				    move[0], move[1], move[4], move[5], "\n-----", move[2], move[3], move[4], move[5]);
 		return [false, "Can't push two stones at once or push your own stones"];
 	}
 	
@@ -147,10 +149,11 @@ function is_double_push_or_selfpush(x,y,dx,dy) {
 		let pushy3 = y + 1.5*dy;
 		let spot1_open_or_off_board = (board[pushx1][pushy1] == 0) || on_different_subboards(x,y,pushx1,pushy1);
 		let spot2_open_or_off_board = (board[pushx2][pushy2] == 0) || on_different_subboards(x,y,pushx2,pushy2);
-		let spot3_open_or_off_board = (board[pushx3][pushy3] == 0) || on_different_subboards(x,y,pushx3,pushy3);
+		// Reverse order since x3/y3 might be off of board
+		let spot3_open_or_off_board = on_different_subboards(x,y,pushx3,pushy3) || (board[pushx3][pushy3] == 0);
 		console.log("--", spot1_open_or_off_board, spot2_open_or_off_board, spot3_open_or_off_board);
 		console.log('--xy are', x,y,pushx1,pushy1, pushx2,pushy2, pushx3,pushy3);
-		if (spot1_open_or_off_board + spot1_open_or_off_board + spot1_open_or_off_board < 1.5) {
+		if (spot1_open_or_off_board + spot2_open_or_off_board + spot3_open_or_off_board < 1.5) {
 			return true;
 		}
 		
@@ -271,15 +274,29 @@ function make_move_sub(x,y,dx,dy) {
 				board[pushx][pushy] = team1_turn ? 2 : 1;
 			}
 		}
-		board[x+dx][y+dy] = team1_turn ? 1 : 2;
 	} else { // Move double space, need to check both for existing stones
 		// Check if there is stone is adjacent spot
 		
 		// Check if there is stone is end spot
-		
-		// Move current stone
-		board[x+dx][y+dy] = team1_turn ? 1 : 2;
+		console.log("FIX PUSH ON DOUBLE MOVE");
+		let pushx1 = x+.5*dx;
+		let pushy1 = y + .5*dy;
+		let pushx2 = x+1*dx;
+		let pushy2 = y + 1*dy;
+		let pushx3 = x+1.5*dx;
+		let pushy3 = y + 1.5*dy;
+		// Can't be same numbered stone on spot since it wouldn't be valid
+		if (board[pushx1][pushy1] != 0 || board[pushx2][pushy2] != 0) {
+			board[pushx1][pushy1] = 0;
+			board[pushx2][pushy2] = 0; // Not needed since moving stone will be put there
+			// Push stone if space on board, else it falls off
+			if (!on_different_subboards(x,y,pushx3,pushy3)) {
+				board[pushx3][pushy3] = team1_turn ? 2: 1;
+			}
+		}
 	}
+	// Move current stone
+	board[x+dx][y+dy] = team1_turn ? 1 : 2;
 	// Clear where it started
 	board[x][y] = 0;
 }

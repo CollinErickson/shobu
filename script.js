@@ -12,6 +12,8 @@ var board = [[2,2,2,2,2,2,2,2],
 			 [1,1,1,1,1,1,1,1]];
 var team1_turn = true;
 
+var use_stopwatch = false;
+
 function parse_move(move) {
 	if (move.length != 8 || move[2] != " " || move[5] != " ") {
 		console.log("bad move!!!")
@@ -177,8 +179,8 @@ function convert_board_to_HTML(board) {
 		}
 		out += "\t<tr>\n";
 		for (let j=0; j < 8; j++) {
-			if (j == 4) {
-				out += "\t\t<td width='20px' style='text-align:center;'>" + "|" + "</td>\n";
+			if (j == 4) { // Add empty space between L/R subboards
+				out += "\t\t<td width='20px' style='text-align:center;'>" + "" + "</td>\n";
 			}
 			out += "\t\t<td class='boardsquare boardsquare" + (j < 3.5 ? "left": "right") + "' id='boardsquare"+i+j+"' style='border:2px solid black' onclick='square_click("+i+", "+j+")'>";
 			//out += board[i][j];
@@ -239,6 +241,12 @@ function input_move(move) {
 	let game_over = check_game_over();
 	if (game_over > 0) {
 		alert("Game over, player " + game_over + " wins!");
+	}
+	
+	// Reset stopwatch if using it
+	if (use_stopwatch) {
+		timer.reset();
+		
 	}
 	
 	return true;

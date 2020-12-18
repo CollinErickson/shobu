@@ -1,5 +1,4 @@
 // https://stackoverflow.com/questions/20318822/how-to-create-a-stopwatch-using-javascript
-// var timer = new Stopwatch(document.getElementById('stopwatch'), {delay: 10});
 var Stopwatch = function(elem, options) {
 
   var timer       = createTimer(),
@@ -12,13 +11,13 @@ var Stopwatch = function(elem, options) {
 
   // default options
   options = options || {};
-  options.delay = options.delay || 1;
+  options.delay = options.delay || 100;
 
   // append elements     
   elem.appendChild(timer);
-  elem.appendChild(startButton);
-  elem.appendChild(stopButton);
-  elem.appendChild(resetButton);
+  //elem.appendChild(startButton);
+  //elem.appendChild(stopButton);
+  //elem.appendChild(resetButton);
 
   // initialize
   reset();
@@ -64,7 +63,7 @@ var Stopwatch = function(elem, options) {
   }
 
   function render() {
-    timer.innerHTML = clock/1000; 
+    timer.innerHTML = Math.round(clock/1000); 
   }
 
   function delta() {
@@ -80,3 +79,18 @@ var Stopwatch = function(elem, options) {
   this.stop   = stop;
   this.reset  = reset;
 };
+
+var timer = null;
+window.addEventListener("load", function(e) {
+  //timer = new Stopwatch(document.getElementById('stopwatch'), {delay: 10});
+})
+function click_stopwatch() {
+  if (use_stopwatch) { // Already using, so reset it or turn it off?
+    timer.reset()
+  } else {
+    document.getElementById('stopwatch').innerHTML = "";
+    timer = new Stopwatch(document.getElementById('stopwatch'), {delay: 50});
+    timer.start()
+    use_stopwatch = true;
+  }
+}

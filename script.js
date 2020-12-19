@@ -11,6 +11,7 @@ var board = [[2,2,2,2,2,2,2,2],
 			 [0,0,0,0,0,0,0,0],
 			 [1,1,1,1,1,1,1,1]];
 var team1_turn = true;
+var clicked_cells = [-1,-1,-1,-1];
 
 var use_stopwatch = false;
 
@@ -246,7 +247,6 @@ function input_move(move) {
 	// Reset stopwatch if using it
 	if (use_stopwatch) {
 		timer.reset();
-		
 	}
 	
 	return true;
@@ -306,7 +306,6 @@ function make_move_sub(x,y,dx,dy) {
 	board[x][y] = 0;
 }
 
-var clicked_cells = [-1,-1,-1,-1];
 function square_click(i,j) {
 	//console.log("clicked on square", i, j);
 	square = document.getElementById("boardsquare"+i+j);
@@ -374,4 +373,29 @@ function check_game_over() {
 		return 1;
 	}	
 	return 0;
+}
+
+function reset_game() {
+	// Reset board info
+	board = [[2,2,2,2,2,2,2,2],
+			 [0,0,0,0,0,0,0,0],
+			 [0,0,0,0,0,0,0,0],
+			 [1,1,1,1,1,1,1,1],
+			 [2,2,2,2,2,2,2,2],
+			 [0,0,0,0,0,0,0,0],
+			 [0,0,0,0,0,0,0,0],
+			 [1,1,1,1,1,1,1,1]];
+	team1_turn = true;	
+	clicked_cells = [-1,-1,-1,-1];
+	
+	// update board
+	display_board(board);
+	
+	// Update turn indicator
+	document.getElementById("divturn").innerHTML = "Turn: " + (team1_turn ? "&#9711;" : "&#11044;") 
+	
+	// Reset stopwatch if using it
+	if (use_stopwatch) {
+		timer.reset();
+	}
 }

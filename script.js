@@ -91,7 +91,7 @@ function is_valid(move) {
 
 function is_passive(x,y,dx,dy) {
 	// Must be on homeboards
-	if (!(team1_turn ? (x >= 4) : (x < 3))) {
+	if (!(team1_turn ? (x >= 4) : (x <= 3))) {
 		//console.log("not on hb");
 		return false;
 	}

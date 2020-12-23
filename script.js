@@ -310,7 +310,7 @@ function square_click(i,j) {
 	//console.log("clicked on square", i, j);
 	square = document.getElementById("boardsquare"+i+j);
 	if (square.classList.contains("selectedboardsquare")) {
-		console.log("already clicked, removing style");
+		//console.log("already clicked, removing style");
 		square.classList.remove("selectedboardsquare");
 		if (clicked_cells[0] == i && clicked_cells[1] == j) {
 			clicked_cells[0] = -1

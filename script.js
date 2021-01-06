@@ -168,7 +168,7 @@ function is_double_push_or_selfpush(x,y,dx,dy) {
 
 function on_different_subboards(x1,y1, x2, y2) {
 	return (Math.floor(x1 / 4) != Math.floor(x2 / 4) || 
-			   Math.floor(x2 / 4) != Math.floor(y2 / 4));
+			   Math.floor(y1 / 4) != Math.floor(y2 / 4));
 }
 
 function convert_board_to_HTML(board) {
@@ -283,7 +283,7 @@ function make_move_sub(x,y,dx,dy) {
 	} else { // Move double space, need to check both for existing stones
 		// Check if there is stone is adjacent spot
 		
-		// Check if there is stone is end spot
+		// Check if there is stone in end spot
 		let pushx1 = x+.5*dx;
 		let pushy1 = y + .5*dy;
 		let pushx2 = x+1*dx;

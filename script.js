@@ -399,3 +399,20 @@ function reset_game() {
 		timer.reset();
 	}
 }
+
+function click_movecontrols() {
+	// Move arrow controls between right of board and below board.
+	// On PC right is better, on mobile below is better.
+	let a = document.getElementById("divmove1");
+	let b = document.getElementById("divmove2");
+	if (b.innerHTML.trim() == "") {
+		arrows = a.innerHTML
+		a.innerHTML = ""
+		b.innerHTML = arrows;
+	} else {
+		arrows = b.innerHTML
+		b.innerHTML = ""
+		a.innerHTML = arrows;
+	}
+	return;
+}

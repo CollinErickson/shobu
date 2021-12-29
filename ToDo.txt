@@ -1,0 +1,7 @@
+Fix aggressive showing as passive
+
+Add button for AI move
+
+Show AI suggested move
+
+Option to play computer, or watch computer vs computer

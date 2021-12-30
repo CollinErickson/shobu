@@ -1,6 +1,4 @@
-
 body {
-	
 	background-color:wheat;/*antiquewhite;*/
 }
 
@@ -28,4 +26,12 @@ body {
 	text-align:center;
 	width:60px;
 	height:60px;
+}
+
+.boardsquareprevmove {
+	/*background-color:#835C3B;*/
+	border-color:tan !important;
+}
+#divAItextoutput {
+	font-family: 'Robot';
 }

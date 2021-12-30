@@ -12,6 +12,7 @@
 	<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 	<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 	<link rel="manifest" href="site.webmanifest">
+	<link href="http://fonts.cdnfonts.com/css/robot" rel="stylesheet">
 </head>
 <body>
 
@@ -26,6 +27,8 @@
 		Turn: &#9711;
 	</div>
 	<div id='divtextoutput'>
+	</div>
+	<div id='divAItextoutput' style='font-family:"Robot";'>
 	</div>
 	
 	<table><tr>
@@ -84,11 +87,21 @@
 		
 	</div>
 	
+	<div>
+		Game mode:
+		<input type='radio' name='radiogamemode' value='2player' id='radiogamemode2player'>
+		<label for='radiogamemode'> 2 player </label>
+		<input type='radio' name='radiogamemode' value='1player' id='radiogamemode1player' checked>
+		<label for='radiogamemode'> 1 player vs AI </label>
+		<input type='radio' name='radiogamemode' value='0player' id='radiogamemode0player'>
+		<label for='radiogamemode'> AI vs AI </label>
+	</div>
+	
 	
 	<table style="margin:100px 0 0 0;"><tr>
 		<td>
 			<div>
-				<a href="https://www.ultraboardgames.com/shobu/game-rules.php"> Rules</a> /
+				<a href="https://www.ultraboardgames.com/shobu/game-rules.php" target="_blank"> Rules</a> /
 			</div>
 		</td>
 		<td>

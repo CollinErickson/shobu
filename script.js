@@ -12,7 +12,7 @@ var board = [[2,2,2,2,2,2,2,2],
 			 [1,1,1,1,1,1,1,1]];
 var team1_turn = true;
 var clicked_cells = [-1,-1,-1,-1];
-
+var move_history = [];
 var use_stopwatch = false;
 
 function parse_move(move) {
@@ -173,6 +173,7 @@ function on_different_subboards(x1,y1, x2, y2) {
 
 function convert_board_to_HTML(board) {
 	out = "<table style='font-size:44px;'> \n";
+	let prevmoveparsed = move_history.length>.5 ? parse_move(move_history[move_history.length - 1]) : null;
 	for (let i=0; i < 8; i++) {
 		if (i == 4) {
 		out += "\t<tr><td colspan='9' style='text-align:center;'>===================</td>\n";
@@ -180,10 +181,17 @@ function convert_board_to_HTML(board) {
 		}
 		out += "\t<tr>\n";
 		for (let j=0; j < 8; j++) {
+			let prev_move = false;
+			if (move_history.length > .5) {
+				prev_move = ((i == prevmoveparsed[1][0]+prevmoveparsed[1][4]) && (j == prevmoveparsed[1][1]+prevmoveparsed[1][5])) ||
+					((i == prevmoveparsed[1][2]+prevmoveparsed[1][4]) && (j == prevmoveparsed[1][3]+prevmoveparsed[1][5]));	
+			}
 			if (j == 4) { // Add empty space between L/R subboards
 				out += "\t\t<td width='20px' style='text-align:center;'>" + "" + "</td>\n";
 			}
-			out += "\t\t<td class='boardsquare boardsquare" + (j < 3.5 ? "left": "right") + "' id='boardsquare"+i+j+"' style='border:2px solid black' onclick='square_click("+i+", "+j+")'>";
+			out += "\t\t<td class='boardsquare boardsquare" + (j < 3.5 ? "left": "right") + " " + 
+				(prev_move ? " boardsquareprevmove " : " ")+
+				"' id='boardsquare"+i+j+"' style='border:2px solid black' onclick='square_click("+i+", "+j+")'>";
 			//out += board[i][j];
 			if (board[i][j] == "0") {
 				out += ""
@@ -226,6 +234,9 @@ function input_move(move) {
 	// do move
 	make_move(move2);
 	
+	// Save move to history
+	move_history.push(move);
+	
 	// update board
 	display_board(board);
 	
@@ -251,7 +262,26 @@ function input_move(move) {
 		timer.reset();
 	}
 	
+	// Run AI if player is AI
+	if (!game_over && ((document.getElementById('radiogamemode1player').checked && !team1_turn) ||
+	   document.getElementById('radiogamemode0player').checked)) {
+		console.log("AI is next");	
+		setTimeout(runAI, 10);
+	}
+	
 	return true;
+}
+
+function runAI() {
+	let ai = new shobuAI();
+	document.getElementById('divAItextoutput').innerHTML = "&#129302; I'm thinking...";
+	setTimeout(function() {
+		ai.makemove();
+		//document.getElementById('divAItextoutput').innerText = "";
+	}, 100);
+	//ai.game.print();
+	//ai2 = new shobuAI(); ai2.game.print();
+	return;
 }
 
 function make_move(move) {
@@ -404,6 +434,7 @@ function reset_game() {
 			 [0,0,0,0,0,0,0,0],
 			 [1,1,1,1,1,1,1,1]];
 	team1_turn = true;	
+	move_history = [];
 	clicked_cells = [-1,-1,-1,-1];
 	
 	// update board

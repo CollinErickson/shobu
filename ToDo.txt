@@ -1,17 +1,13 @@
-Fix aggressive showing as passive
-
 Add button for AI move
 
 Show AI suggested move
 
-Option to play computer, or watch computer vs computer
-
 Change alert to text box
 
-Show last move with highlight
-
-Track all moves
-
-AI display, say it's thinking
-
 separate function for single stone moves. button to show all feasible moves
+
+Allow exit for AI vs AI, stuck in inf loop
+
+Draw for repeated positions?
+
+Add case for no feasible move (lose)

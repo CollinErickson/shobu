@@ -25,6 +25,8 @@
 	<div id="divturn">
 		Turn: &#9711;
 	</div>
+	<div id='divtextoutput'>
+	</div>
 	
 	<table><tr>
 		<td>
@@ -35,7 +37,7 @@
 		
 		<td>
 	
-			<div id="divmove1" style="margin-left:100px;">
+			<div hidden id="divmove1" style="margin-left:100px;">
 				<table id="tablemove" style="font-size:54px;">
 					<tr>
 						<td onclick="arrow_click(0,0)">&#11017;</td>
@@ -78,7 +80,7 @@
 		
 	</tr></table>
 	
-	<div id='divmove2'>
+	<div hidden id='divmove2'>
 		
 	</div>
 	
@@ -97,6 +99,11 @@
 		<td>
 			<div id ='stopwatch' class='stopwatch' onclick='click_stopwatch()'>
 				Stopwatch /
+			</div>
+		</td>
+		<td>
+			<div id ='hidecontrols' onclick='click_hidecontrols()'>
+				Hide controls /
 			</div>
 		</td>
 		<td>

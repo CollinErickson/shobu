@@ -242,6 +242,8 @@ function input_move(move) {
 	let game_over = check_game_over();
 	if (game_over > 0) {
 		alert("Game over, player " + game_over + " wins!");
+		
+		document.getElementById('divtextoutput').innerText = "Game over, player " + game_over + " wins!";
 	}
 	
 	// Reset stopwatch if using it
@@ -309,7 +311,7 @@ function make_move_sub(x,y,dx,dy) {
 function square_click(i,j) {
 	//console.log("clicked on square", i, j);
 	square = document.getElementById("boardsquare"+i+j);
-	if (square.classList.contains("selectedboardsquare")) {
+	if (square.classList.contains("selectedboardsquare")) { // Remove clicked stone
 		//console.log("already clicked, removing style");
 		square.classList.remove("selectedboardsquare");
 		if (clicked_cells[0] == i && clicked_cells[1] == j) {
@@ -321,9 +323,8 @@ function square_click(i,j) {
 		} else {
 			console.log("error 1024329 clicked cell");
 		}
-	} else {
+	} else if (board[i][j] == (team1_turn ? 1 : 2)) {// Click on stone
 		// Only permit when clicking on own stone.
-		if (board[i][j] == (team1_turn ? 1 : 2)) {
 			if (clicked_cells[0] < 0) {
 				clicked_cells[0] = i;
 				clicked_cells[1] = j;
@@ -336,6 +337,23 @@ function square_click(i,j) {
 				clicked_cells[3] = j;
 			}
 			square.classList.add("selectedboardsquare");
+	} else { // Move to a square by clicking on it. Make sure two stones selected, one in click quadrant
+		// Make sure two stones are selected
+		if (clicked_cells[0] >= 0 && clicked_cells[1] >= 0 && clicked_cells[2] >= 0 && clicked_cells[3] >= 0) {
+			// Find which one is in correct quadrant
+			if (Math.floor(clicked_cells[0] / 4) == Math.floor(i / 4) && Math.floor(clicked_cells[1] / 4) == Math.floor(j/4)) {
+				let dx = i - clicked_cells[0];
+				let dy = j - clicked_cells[1];
+				if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
+					return arrow_click(dx+2, dy+2);
+				}
+			} else if (Math.floor(clicked_cells[2] / 4) == Math.floor(i / 4) && Math.floor(clicked_cells[3] / 4) == Math.floor(j/4)) {
+				let dx = i - clicked_cells[2];
+				let dy = j - clicked_cells[3];
+				if (dx >= -2 && dx <= 2 && dy >= -2 && dy <= 2) {
+					return arrow_click(dx+2, dy+2);
+				}
+			}
 		}
 	}
 	
@@ -398,6 +416,20 @@ function reset_game() {
 	if (use_stopwatch) {
 		timer.reset();
 	}
+	
+	// Clear text output
+	document.getElementById('divtextoutput').innerText = '';
+}
+
+function click_hidecontrols() {
+	let a = document.getElementById("divmove1");
+	let b = document.getElementById("divmove2");
+	if (a.hidden) {
+		
+	}
+	a.hidden = !a.hidden;
+	b.hidden = !b.hidden;
+	return;
 }
 
 function click_movecontrols() {

@@ -265,7 +265,7 @@ function input_move(move) {
 	// Run AI if player is AI
 	if (!game_over && ((document.getElementById('radiogamemode1player').checked && !team1_turn) ||
 	   document.getElementById('radiogamemode0player').checked)) {
-		console.log("AI is next");	
+		//console.log("AI is next");	
 		setTimeout(runAI, 10);
 	}
 	
@@ -277,7 +277,7 @@ function runAI() {
 	document.getElementById('divAItextoutput').innerHTML = "&#129302; I'm thinking...";
 	setTimeout(function() {
 		ai.makemove();
-		//document.getElementById('divAItextoutput').innerText = "";
+		document.getElementById('divAItextoutput').innerText = "";
 	}, 100);
 	//ai.game.print();
 	//ai2 = new shobuAI(); ai2.game.print();

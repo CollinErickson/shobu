@@ -23,12 +23,23 @@
 	<!--<input type="text" id="text_move_input" name="lname" value="30 77 12"><br><br>
 	<input type="submit" value="Submit" onclick="input_move(document.getElementById('text_move_input').value)"> -->
 	
-	<div id="divturn">
-		Turn: &#9711;
-	</div>
-	<div id='divtextoutput'>
-	</div>
-	<div id='divAItextoutput' style='font-family:"Robot";'>
+	<table><tr>
+		<td style='margin-right:30px;'>
+			<div id="divturn">
+				Turn: &#9711;
+			</div>
+		</td>
+		<!--<td style='margin-right:30px;'>
+			<div id='divtextoutput' style='font-size:40px;'>
+			</div>
+		</td>-->
+		<td>
+			<div id='divAItextoutput' style='font-family:"Robot";'>
+			</div>
+		</td>
+	</tr></table>
+	
+	<div id='divtextoutput' style='font-size:40px;'>
 	</div>
 	
 	<table><tr>
@@ -87,15 +98,22 @@
 		
 	</div>
 	
-	<div>
-		Game mode:
-		<input type='radio' name='radiogamemode' value='2player' id='radiogamemode2player'>
-		<label for='radiogamemode'> 2 player </label>
-		<input type='radio' name='radiogamemode' value='1player' id='radiogamemode1player' checked>
-		<label for='radiogamemode'> 1 player vs AI </label>
-		<input type='radio' name='radiogamemode' value='0player' id='radiogamemode0player'>
-		<label for='radiogamemode'> AI vs AI </label>
-	</div>
+	<table><tr>
+		<td>
+			<input type='button' id='buttonnewgame' value='New game' onclick='reset_game()'>
+		</td>
+		<td>
+			<div>
+				Game mode:
+				<input type='radio' name='radiogamemode' value='2player' id='radiogamemode2player'>
+				<label for='radiogamemode'> 2 player </label>
+				<input type='radio' name='radiogamemode' value='1player' id='radiogamemode1player' checked>
+				<label for='radiogamemode'> 1 player vs AI </label>
+				<input type='radio' name='radiogamemode' value='0player' id='radiogamemode0player'>
+				<label for='radiogamemode'> AI vs AI </label>
+			</div>
+		</td>
+	</tr></table>
 	
 	
 	<table style="margin:100px 0 0 0;"><tr>
@@ -104,11 +122,11 @@
 				<a href="https://www.ultraboardgames.com/shobu/game-rules.php" target="_blank"> Rules</a> /
 			</div>
 		</td>
-		<td>
+		<!--<td>
 			<div id='divresetgame' onclick='reset_game()'>
 				New game /
 			</div>
-		</td>
+		</td>-->
 		<td>
 			<div id ='stopwatch' class='stopwatch' onclick='click_stopwatch()'>
 				Stopwatch /

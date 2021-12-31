@@ -58,7 +58,7 @@ shobuAI.prototype.makemove = function() {
 	movestr += ' ';
 	movestr += move[0][3][0] + 2;
 	movestr += move[0][3][1] + 2;
-	console.log("movestr is", movestr);
+	//console.log("movestr is", movestr);
 	input_move(movestr);
 	return 0;
 }

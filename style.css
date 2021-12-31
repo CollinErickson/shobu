@@ -35,3 +35,12 @@ body {
 #divAItextoutput {
 	font-family: 'Robot';
 }
+
+@font-face {
+	font-family: RobotReg;
+	src: url(Robot-Regular.ttf);
+}
+
+#divAItextoutput {
+	font-family:RobotReg;
+}
